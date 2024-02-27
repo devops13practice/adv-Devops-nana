@@ -14,9 +14,10 @@ resource "aws_vpc" "myapp-vpc" {
 resource "aws_subnet" "myapp-subnet-1" {
     vpc_id = aws_vpc.myapp-vpc.id
     cidr_block = var.subnet_cidr_block
-    availability_zone =var.avail_zone
+    availability_zone = var.avail_zone
+    map_public_ip_on_launch = true
     tags = {
-      Name: "${var.env_prefix}-subnet-1"
+      Name: "${var.env_prefix}-public-subnet-1"
     }
 }
 
@@ -27,7 +28,7 @@ resource "aws_route_table" "myapp-route-table" {
     gateway_id = aws_internet_gateway.myapp-igw.id
   }
   tags = {
-    Name: "${var.env_prefix}-rtb"
+    Name: "${var.env_prefix}-public-rt"
   }
 }
 

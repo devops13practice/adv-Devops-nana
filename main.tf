@@ -98,8 +98,9 @@ resource "aws_instance" "myapp-server" {
   availability_zone = var.avail_zone[0]
   associate_public_ip_address = true
   key_name = "practice"
+  for_each = toset(["jenkins-controller-node", "jenkins-agent-node", "ansible-node"])
   
   tags = {
-    Name: "${var.env_prefix}-ec2"
+    Name: "${each.key}"
   }
 }

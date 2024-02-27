@@ -86,5 +86,4 @@ resource "aws_instance" "myapp-server" {
   tags = {
     Name: "${var.env_prefix}-ec2"
   }
-
 }

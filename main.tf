@@ -2,6 +2,7 @@ variable "vpc_cidr_block" {}
 variable "subnet_cidr_block" {}
 variable "avail_zone" {}
 variable "env_prefix" {}
+variable "instance_type" {}
 
 resource "aws_vpc" "myapp-vpc" {
     cidr_block = var.vpc_cidr_block
@@ -71,4 +72,19 @@ resource "aws_security_group" "myapp-sg" {
   tags = {
     Name: "${var.env_prefix}-sg"
   }
+}
+
+resource "aws_instance" "myapp-server" {
+  ami = "ami-0e670eb768a5fc3d4"
+  instance_type = var.instance_type
+  subnet_id = aws_subnet.myapp-subnet-1.id
+  vpc_security_group_ids = [ aws_security_group.myapp-sg.id ]
+  availability_zone = var.avail_zone
+  associate_public_ip_address = true
+  key_name = "practice"
+  
+  tags = {
+    Name: "${var.env_prefix}-ec2"
+  }
+
 }

@@ -3,6 +3,8 @@ variable "subnet_cidr_block" {}
 variable "avail_zone" {}
 variable "env_prefix" {}
 variable "instance_type" {}
+variable "instance_name" {}
+variable "ami-image" {}
 
 resource "aws_vpc" "myapp-vpc" {
     cidr_block = var.vpc_cidr_block
@@ -91,15 +93,17 @@ resource "aws_security_group" "myapp-sg" {
 }
 
 resource "aws_instance" "myapp-server" {
-  ami = "ami-0e670eb768a5fc3d4"
+  #ami = "ami-0e670eb768a5fc3d4"
+  #ami = var.ami-image.amazon_linux_2023
+  ami = var.ami-image.ubuntu
   instance_type = var.instance_type
   subnet_id = aws_subnet.myapp-subnet-1.id
   vpc_security_group_ids = [ aws_security_group.myapp-sg.id ]
   availability_zone = var.avail_zone[0]
   associate_public_ip_address = true
   key_name = "practice"
-  for_each = toset(["jenkins-controller-node", "jenkins-agent-node", "ansible-node"])
-  
+  #for_each = toset(["jenkins-controller-node", "jenkins-agent-node", "ansible-node"])
+  for_each = toset([var.instance_name[0], var.instance_name[1], var.instance_name[2]])
   tags = {
     Name: "${each.key}"
   }
